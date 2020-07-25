@@ -58,7 +58,7 @@ if(isset($_SERVER['CI_DOMAIN']))
 {
     $domain = $_SERVER['CI_DOMAIN'];
 }
-define('DOMAIN', !empty($domain) ? $domain: 'example.com');
+define('DOMAIN', !empty($domain) ? $domain: 'ci.test');
 
 /*
  *---------------------------------------------------------------
@@ -122,7 +122,7 @@ $system_path = '../system';
  *
  * NO TRAILING SLASH!
  */
-$application_folder = '/var/www/test_task/application';
+$application_folder = '../application';
 
 /*
  *---------------------------------------------------------------

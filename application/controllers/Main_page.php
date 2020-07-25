@@ -84,23 +84,42 @@ class Main_page extends MY_Controller
     }
 
 
-    public function login($user_id)
+    public function login()
     {
-        // Right now for tests:
-        $post_id = intval($user_id);
-
-        if (empty($post_id)){
-            return $this->response_error(CI_Core::RESPONSE_GENERIC_WRONG_PARAMS);
-        }
-
-        // But data from modal window sent by POST request.  App::get_ci()->input...  to get it.
-
 
         //Todo: Authorisation
+        $this->load->library('form_validation');
 
-        Login_model::start_session($user_id);
+        $rules = array(
+            array(
+                'field' => 'email',
+                'label' => 'Email',
+                'rules' => 'trim|required|valid_email',
+            ),
+            array(
+                'field' => 'password',
+                'label' => 'Password',
+                'rules' => 'trim|required|alpha_numeric',
+            ),
+        );
 
-        return $this->response_success(['user' => $user_id]);
+        $this->form_validation->set_rules($rules);
+
+        if($this->form_validation->run()) {
+
+            try {
+                Login_model::login($this->input->post());
+            } catch (CriticalException $e) {
+                return $this->response_error("error", $e->getMessage());
+            }
+
+            return $this->response_success(['user' => App::get_ci()->session->id]);
+        } else {
+            return $this->response_error("error", $this->form_validation->error_array());
+        }
+
+
+
     }
 
 

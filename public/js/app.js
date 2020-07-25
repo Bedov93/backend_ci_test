@@ -4,6 +4,7 @@ var app = new Vue({
 		login: '',
 		pass: '',
 		post: false,
+		postId: false,
 		invalidLogin: false,
 		invalidPass: false,
 		invalidSum: false,
@@ -34,7 +35,7 @@ var app = new Vue({
 		}
 	},
 	created(){
-		var self = this
+		var self = this;
 		axios
 			.get('/main_page/get_all_posts')
 			.then(function (response) {
@@ -47,7 +48,7 @@ var app = new Vue({
 		},
 		logIn: function () {
 			var self= this;
-			if(self.login === ''){
+			if(self.email === ''){
 				self.invalidLogin = true
 			}
 			else if(self.pass === ''){
@@ -57,10 +58,13 @@ var app = new Vue({
 			else{
 				self.invalidLogin = false
 				self.invalidPass = false
-				axios.post('/main_page/login', {
-					login: self.login,
-					password: self.pass
-				})
+
+				const form = new FormData();
+
+				form.append('email', self.login);
+				form.append('password', self.pass);
+
+				axios.post('/main_page/login', form)
 					.then(function (response) {
 						setTimeout(function () {
 							$('#loginModal').modal('hide');
@@ -119,6 +123,22 @@ var app = new Vue({
 							$('#amountModal').modal('show');
 						}, 500);
 					}
+				})
+		},
+
+		comment: function () {
+			var self = this;
+
+			const form = new FormData();
+
+			form.append('post_id', self.post.id);
+			form.append('message', self.commentText);
+
+			axios.post('/main_page/comment', form)
+				.then(function (response) {
+					setTimeout(function () {
+						$('#loginModal').modal('hide');
+					}, 500);
 				})
 		}
 	}
