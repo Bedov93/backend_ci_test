@@ -9,7 +9,7 @@ var app = new Vue({
 		invalidPass: false,
 		invalidSum: false,
 		posts: [],
-		addSum: 0,
+		addSum: '10.00',
 		amount: 0,
 		likes: 0,
 		commentText: '',
@@ -86,7 +86,13 @@ var app = new Vue({
 				axios.post('/main_page/add_money', form)
 					.then(function (response) {
 						setTimeout(function () {
-							$('#addModal').modal('hide');
+							if(response.data.status === 'success') {
+								$("#userBalance").text(response.data.balance);
+								$('#addModal').modal('hide');
+							} else {
+								self.invalidSum = true;
+								self.sumError = response.data.sum;
+							}
 						}, 500);
 					})
 			}

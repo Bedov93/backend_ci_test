@@ -20,6 +20,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <ul class="navbar-nav mr-auto">
         <li class="nav-item">
             <?  if (User_model::is_logged()) {?>
               <a href="/main_page/logout" class="btn btn-primary my-2 my-sm-0"
@@ -38,6 +39,10 @@
               </button>
             <? }?>
         </li>
+      </ul>
+        <span class="navbar-text" v-if="!userBalance">
+            <b>Balance:</b> $ <span id="userBalance"><?= $user->wallet_balance ?></span>
+        </span>
       </div>
 <!--      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">-->
 <!--        <li class="nav-item">-->
@@ -210,7 +215,7 @@
               <label for="exampleInputEmail1">Enter sum</label>
               <input type="text" class="form-control" id="addBalance" v-model="addSum" required>
               <div class="invalid-feedback" v-if="invalidSum">
-                Please write a sum.
+                {{ sumError }}
               </div>
             </div>
           </form>

@@ -326,6 +326,7 @@ class User_model extends CI_Emerald_Model {
 
             $o->personaname = $data->get_personaname();
             $o->avatarfull = $data->get_avatarfull();
+            $o->wallet_balance = $data->get_wallet_balance();
 
             $o->time_created = $data->get_time_created();
             $o->time_updated = $data->get_time_updated();

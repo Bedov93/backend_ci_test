@@ -166,12 +166,16 @@ class Main_page extends MY_Controller
 
     public function add_money()
     {
+        if (!User_model::is_logged()) {
+            return $this->response_error(CI_Core::RESPONSE_GENERIC_NEED_AUTH);
+        }
+
 
         $rules = array(
             array(
                 'field' => 'sum',
                 'label' => 'Sum',
-                'rules' => 'trim|required|integer',
+                'rules' => 'trim|required|decimal',
             ),
         );
 
@@ -181,12 +185,21 @@ class Main_page extends MY_Controller
 
             $sum = App::get_ci()->input->post('sum');
 
-            return $this->response_success(['amount' => rand(1, 55)]);
+            $user = User_model::get_user();
+            $user->set_wallet_balance($user->get_wallet_balance()+$sum);
+            $user->set_wallet_total_refilled($user->get_wallet_total_refilled()+$sum);
+
+            return $this->response_success(['balance' => $user->get_wallet_balance()]);
 
         } else {
             return $this->response_error("error", $this->form_validation->error_array());
         }
     }
+
+    public function get_user_balance() {
+
+    }
+
 
     public function buy_boosterpack()
     {
