@@ -125,7 +125,6 @@ var app = new Vue({
 					}
 				})
 		},
-
 		comment: function () {
 			var self = this;
 
@@ -137,9 +136,14 @@ var app = new Vue({
 			axios.post('/main_page/comment', form)
 				.then(function (response) {
 					setTimeout(function () {
-						$('#loginModal').modal('hide');
+						if(response.data.status === 'success') {
+							self.commentText = '';
+							// realtime update
+							self.post.coments = self.post.coments.concat(response.data.comment);
+							console.log(self.post.coments);
+						}
 					}, 500);
-				})
+				});
 		}
 	}
 });
