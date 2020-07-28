@@ -79,9 +79,11 @@ var app = new Vue({
 			}
 			else{
 				self.invalidSum = false
-				axios.post('/main_page/add_money', {
-					sum: self.addSum,
-				})
+
+				const form = new FormData();
+				form.append('sum', self.addSum);
+
+				axios.post('/main_page/add_money', form)
 					.then(function (response) {
 						setTimeout(function () {
 							$('#addModal').modal('hide');

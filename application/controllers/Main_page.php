@@ -17,6 +17,8 @@ class Main_page extends MY_Controller
         App::get_ci()->load->model('Login_model');
         App::get_ci()->load->model('Post_model');
 
+        $this->load->library('form_validation');
+
         if (is_prod()) {
             die('In production it will be hard to debug! Run as development environment!');
         }
@@ -64,8 +66,6 @@ class Main_page extends MY_Controller
         if (!User_model::is_logged()) {
             return $this->response_error(CI_Core::RESPONSE_GENERIC_NEED_AUTH);
         }
-
-        $this->load->library('form_validation');
 
         $rules = array(
             array(
@@ -128,8 +128,6 @@ class Main_page extends MY_Controller
 
     public function login()
     {
-        $this->load->library('form_validation');
-
         $rules = array(
             array(
                 'field' => 'email',
@@ -168,8 +166,26 @@ class Main_page extends MY_Controller
 
     public function add_money()
     {
-        // todo: add money to user logic
-        return $this->response_success(['amount' => rand(1, 55)]);
+
+        $rules = array(
+            array(
+                'field' => 'sum',
+                'label' => 'Sum',
+                'rules' => 'trim|required|integer',
+            ),
+        );
+
+        $this->form_validation->set_rules($rules);
+
+        if ($this->form_validation->run()) {
+
+            $sum = App::get_ci()->input->post('sum');
+
+            return $this->response_success(['amount' => rand(1, 55)]);
+
+        } else {
+            return $this->response_error("error", $this->form_validation->error_array());
+        }
     }
 
     public function buy_boosterpack()
