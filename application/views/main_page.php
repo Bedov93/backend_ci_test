@@ -40,9 +40,16 @@
             <? }?>
         </li>
       </ul>
-        <span class="navbar-text" v-if="!userBalance">
-            <b>Balance:</b> $ <span id="userBalance"><?= $user->wallet_balance ?></span>
-        </span>
+
+          <?  if (User_model::is_logged()) { ?>
+            <span class="navbar-text" v-if="!userBalance">
+                <b>Likes:</b>  <span id="userLikes"><?= $user->likes ?></span>
+            </span>
+              &nbsp;
+            <span class="navbar-text" v-if="!userBalance">
+                <b>Balance:</b> $ <span id="userBalance"><?= $user->wallet_balance ?></span>
+            </span>
+          <? } ?>
       </div>
 <!--      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">-->
 <!--        <li class="nav-item">-->

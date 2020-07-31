@@ -132,6 +132,14 @@ class User_model extends CI_Emerald_Model {
     }
 
     /**
+     * @return int
+     */
+    public function get_likes(): int
+    {
+        return $this->likes;
+    }
+
+    /**
      * @return float
      */
     public function get_wallet_balance(): float
@@ -326,6 +334,7 @@ class User_model extends CI_Emerald_Model {
 
             $o->personaname = $data->get_personaname();
             $o->avatarfull = $data->get_avatarfull();
+            $o->likes = $data->get_likes();
             $o->wallet_balance = $data->get_wallet_balance();
 
             $o->time_created = $data->get_time_created();
