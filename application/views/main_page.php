@@ -42,11 +42,11 @@
       </ul>
 
           <?  if (User_model::is_logged()) { ?>
-            <span class="navbar-text" v-if="!userBalance">
+            <span class="navbar-text">
                 <b>Likes:</b>  <span id="userLikes"><?= $user->likes ?></span>
             </span>
               &nbsp;
-            <span class="navbar-text" v-if="!userBalance">
+            <span class="navbar-text">
                 <b>Balance:</b> $ <span id="userBalance"><?= $user->wallet_balance ?></span>
             </span>
           <? } ?>
@@ -190,12 +190,14 @@
                 </div>
               </div>
               <p class="card-text" v-for="comment in post.coments"> {{comment.user.personaname + ' - '}}<small class="text-muted">{{comment.text}}</small></p>
+                    <?  if (User_model::is_logged()) { ?>
               <form class="form-inline">
                 <div class="form-group">
                   <input type="text" class="form-control" id="addComment" v-model="commentText">
                 </div>
                 <button class="btn btn-primary" @click.prevent="comment">Add comment</button>
               </form>
+                <? } ?>
             </div>
           </div>
         </div>

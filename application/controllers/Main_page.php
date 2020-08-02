@@ -16,6 +16,8 @@ class Main_page extends MY_Controller
         App::get_ci()->load->model('User_model');
         App::get_ci()->load->model('Login_model');
         App::get_ci()->load->model('Post_model');
+        App::get_ci()->load->model('PostLikes_model');
+        App::get_ci()->load->model('CommentLikes_model');
 
         $this->load->library('form_validation');
 
@@ -186,8 +188,8 @@ class Main_page extends MY_Controller
             $sum = App::get_ci()->input->post('sum');
 
             $user = User_model::get_user();
-            $user->set_wallet_balance($user->get_wallet_balance()+$sum);
-            $user->set_wallet_total_refilled($user->get_wallet_total_refilled()+$sum);
+            $user->set_wallet_balance($user->get_wallet_balance() + $sum);
+            $user->set_wallet_total_refilled($user->get_wallet_total_refilled() + $sum);
 
             return $this->response_success(['balance' => $user->get_wallet_balance()]);
 
@@ -196,7 +198,8 @@ class Main_page extends MY_Controller
         }
     }
 
-    public function get_user_balance() {
+    public function get_user_balance()
+    {
 
     }
 
@@ -208,10 +211,61 @@ class Main_page extends MY_Controller
     }
 
 
-    public function like()
+    public function like_post($post_id = 0)
     {
-        // todo: add like post\comment logic
-        return $this->response_success(['likes' => rand(1, 55)]); // Колво лайков под постом \ комментарием чтобы обновить
+
+        if (!User_model::is_logged()) {
+            return $this->response_error(CI_Core::RESPONSE_GENERIC_NEED_AUTH);
+        }
+
+        $post_id = intval($post_id);
+
+        if (empty($post_id)) {
+            return $this->response_error(CI_Core::RESPONSE_GENERIC_WRONG_PARAMS);
+        }
+
+        $Like = PostLikes_model::get_by_post_id($post_id);
+
+        if ($Like) {
+            $Like->delete();
+        } else {
+            try {
+                PostLikes_model::create([
+                    'user_id' => User_model::get_session_id(),
+                    'post_id' => $post_id
+                ]);
+            } catch (EmeraldModelNoDataException $ex) {
+                return $this->response_error(CI_Core::RESPONSE_GENERIC_NO_DATA);
+            }
+        }
     }
 
+    public function like_comment($comment_id = 0)
+    {
+
+        if (!User_model::is_logged()) {
+            return $this->response_error(CI_Core::RESPONSE_GENERIC_NEED_AUTH);
+        }
+
+        $post_id = intval($comment_id);
+
+        if (empty($post_id)) {
+            return $this->response_error(CI_Core::RESPONSE_GENERIC_WRONG_PARAMS);
+        }
+
+        $Like = CommentLikes_model::get_by_comment_id($comment_id);
+
+        if ($Like) {
+            $Like->delete();
+        } else {
+            try {
+                CommentLikes_model::create([
+                    'user_id' => User_model::get_session_id(),
+                    'comment_id' => $comment_id
+                ]);
+            } catch (EmeraldModelNoDataException $ex) {
+                return $this->response_error(CI_Core::RESPONSE_GENERIC_NO_DATA);
+            }
+        }
+    }
 }

@@ -113,7 +113,7 @@ var app = new Vue({
 		addLike: function (id) {
 			var self= this;
 			axios
-				.get('/main_page/like')
+				.get('/main_page/like/'+id)
 				.then(function (response) {
 					self.likes = response.data.likes;
 				})
